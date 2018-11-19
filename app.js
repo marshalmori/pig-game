@@ -10,11 +10,9 @@ GAME RULES:
 */
 
 
-var scores, roundScore, activePlayer;
+var scores, roundScore, activePlayer, gamePlaying;
 
-scores = [0,0];
-roundScore = 0;
-activePlayer = 0;
+init();
 
 // dice = Math.floor(Math.random() * 6) + 1;
 // document.querySelector('#current-' + activePlayer).textContent = dice;
@@ -22,56 +20,51 @@ activePlayer = 0;
 // var x = document.querySelector('#score-0').textContent;
 // console.log(x);
 
-document.querySelector('.dice').style.display = 'none';
-
-document.getElementById('score-0').textContent = '0';
-document.getElementById('score-1').textContent = '0';
-document.getElementById('current-0').textContent = '0';
-document.getElementById('current-1').textContent = '0';
 
 document.querySelector('.btn-roll').addEventListener('click', function(){
-  // 1. Random number
-  var dice = Math.floor(Math.random() * 6) + 1;
 
-  // 2. Display the result
-  var diceDOM = document.querySelector('.dice');
-  diceDOM.style.display = 'block';
-  diceDOM.src = 'dice-' + dice + '.png';
+  if(gamePlaying){
+    // 1. Random number
+    var dice = Math.floor(Math.random() * 6) + 1;
 
-  // 3. Update the round score IF the rolled number was NOT a 1
-  if (dice !== 1){
-    roundScore += dice;
-    document.getElementById('current-' + activePlayer).textContent = roundScore;
+    // 2. Display the result
+    var diceDOM = document.querySelector('.dice');
+    diceDOM.style.display = 'block';
+    diceDOM.src = 'dice-' + dice + '.png';
+
+    // 3. Update the round score IF the rolled number was NOT a 1
+    if (dice !== 1){
+      roundScore += dice;
+      document.getElementById('current-' + activePlayer).textContent = roundScore;
+    }else{
+      nextPlayer();
+    }
   }else{
-    //MINHA SOLUÇÃO
-    // roundScore = 0;
-    // document.getElementById('current-' + activePlayer).textContent = '0';
-    // document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
-    // //Next player
-    // activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
-    // document.querySelector('.player-' + activePlayer + '-panel').classList.add('active');
-
-    //SOLUÇÃO DO AUTOR
-    nextPlayer();
-
+    document.quer
   }
+
 
 });
 
 
 document.querySelector('.btn-hold').addEventListener('click', function() {
-  scores[activePlayer] += roundScore;
-  document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+  if(gamePlaying){
+    scores[activePlayer] += roundScore;
+    document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
-  if(scores[activePlayer] >= 10){
-    document.querySelector('#name-' + activePlayer).textContent = 'Vencedor !';
-    document.querySelector('.dice').style.display = 'none';
-    document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
-    document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+    if(scores[activePlayer] >= 10){
+      document.querySelector('#name-' + activePlayer).textContent = 'Vencedor !';
+      document.querySelector('.dice').style.display = 'none';
+      document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+      document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+      gamePlaying = false;
 
-  } else {
-      nextPlayer();
+    } else {
+        nextPlayer();
+    }
   }
+
+
 
 });
 
@@ -90,4 +83,33 @@ function nextPlayer(){
   document.querySelector('.player-1-panel').classList.toggle('active');
 
   document.querySelector('.dice').style.display = 'none';
+}
+
+document.querySelector('.btn-new').addEventListener('click', init);
+
+function init(){
+  scores = [0,0];
+  roundScore = 0;
+  activePlayer = 0;
+  gamePlaying = true;
+
+  document.querySelector('.dice').style.display = 'none';
+
+  document.getElementById('score-0').textContent = '0';
+  document.getElementById('score-1').textContent = '0';
+  document.getElementById('current-0').textContent = '0';
+  document.getElementById('current-1').textContent = '0';
+  document.getElementById('name-0').textContent = 'Jogador 1';
+  document.getElementById('name-1').textContent = 'Jogador 2';
+  document.querySelector('.player-0-panel').classList.remove('winner');
+  document.querySelector('.player-1-panel').classList.remove('winner');
+  document.querySelector('.player-0-panel').classList.remove('active');
+  document.querySelector('.player-1-panel').classList.remove('active');
+  document.querySelector('.player-0-panel').classList.add('active');
+
+
+
+
+
+
 }
